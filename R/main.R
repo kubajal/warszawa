@@ -134,7 +134,7 @@ plot_statistics <- function(df, df_name, column_name) {
   png(x_sanitized)
   plot(df$date, df[[column_name]], type = "l", xaxt = "n",
       xlab = "Year-Month", ylab = column_name)      # line
-  points(df$date, df[[column_name]] == "character")                      # dots on observed months
+  # points(df$date, df[[column_name]] == "character")                      # dots on observed months
   axis.Date(1,
             at = seq(min(df$date), max(df$date), by = "months"),
             format = "%Y-%m")
