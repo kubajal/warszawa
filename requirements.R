@@ -1,0 +1,5 @@
+install.packages("readxl")
+install.packages("stringr")
+install.packages("futile.logger")
+install.packages("jsonlite")
+install.packages("plotly")

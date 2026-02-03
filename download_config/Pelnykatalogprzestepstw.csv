@@ -16,11 +16,11 @@ id,url,year,month,collapse,new_name
 15,https://ksp.bip.policja.gov.pl/download/25/110714/Pelnykatalogprzestepstwlipiec2019.xlsx,2019,7,1,data_2019_7.xlsx
 16,https://ksp.bip.policja.gov.pl/download/25/111136/Pelnykatalogprzestepstwsierpien2019.xls,2019,8,1,data_2019_8.xls
 17,https://ksp.bip.policja.gov.pl/download/25/112564/Pelnykatalogprzestepstwwrzesien2019.xls,2019,9,1,data_2019_9.xls
-18,https://ksp.bip.policja.gov.pl/download/25/112565/Pelnykatalogprzestepstwpazdziernik2019-1.xls,2019,10,0,data_2019_10.xls
+18,https://ksp.bip.policja.gov.pl/download/25/112565/Pelnykatalogprzestepstwpazdziernik2019-1.xls,2019,10,1,data_2019_10.xls
 19,https://ksp.bip.policja.gov.pl/download/25/114207/Pelnykatalogprzestepstwlistopad2019.xls,2019,11,1,data_2019_11.xls
-20,https://ksp.bip.policja.gov.pl/download/25/114208/Przestepstwagospodarczegrudzien2019.xls,2019,12,1,data_2019_12.xls
+20,https://ksp.bip.policja.gov.pl/download/25/114208/Przestepstwagospodarczegrudzien2019.xls,2019,12,1,invalid-link_2019_12.xls
 21,https://ksp.bip.policja.gov.pl/download/25/114799/Pelnykatalogprzestepstwstyczen2020r.xlsx,2020,1,0,data_2020_1.xlsx
-22,https://ksp.bip.policja.gov.pl/download/25/116353/Przestepstwagospodarczeluty2020r.xls,2020,2,1,data_2020_2.xls
+22,https://ksp.bip.policja.gov.pl/download/25/116353/Przestepstwagospodarczeluty2020r.xls,2020,2,1,invalid-link_12_2020_2.xls
 23,https://ksp.bip.policja.gov.pl/download/25/116354/Pelnykatalogprzestepstwmarzec2020r.xls,2020,3,1,data_2020_3.xls
 24,https://ksp.bip.policja.gov.pl/download/25/116355/Pelnykatalogprzestepstwkwiecien2020r.xls,2020,4,1,data_2020_4.xls
 25,https://ksp.bip.policja.gov.pl/download/25/117858/Pelnykatalogprzestepstwmaj2020r.xls,2020,5,1,data_2020_5.xls
@@ -84,3 +84,8 @@ id,url,year,month,collapse,new_name
 83,https://ksp.bip.policja.gov.pl/download/25/143506/Pelnykatalogprzestepstwstyczen-marzec2025.xls,2025,3,1,data_2025_3.xls
 84,https://ksp.bip.policja.gov.pl/download/25/143730/Pelnykatalogprzestepstwstyczen-kwiecien2025.xls,2025,4,1,data_2025_4.xls
 85,https://ksp.bip.policja.gov.pl/download/25/144019/Pelnykatalogprzestepstwstyczen-maj2025.xls,2025,5,1,data_2025_5.xls
+86,https://ksp.bip.policja.gov.pl/download/25/144374/Pelnykatalogprzestepstwstyczen-czerwiec2025.xls,2025,6,1,data_2025_6.xls
+87,https://ksp.bip.policja.gov.pl/download/25/145408/Pelnykatalogprzestepstwstyczen-lipiec2025r.xls,2025,7,1,data_2025_7.xls
+88,https://ksp.bip.policja.gov.pl/download/25/145421/Pelnykatalogprzestepstwstyczen-sierpien2025r.xls,2025,8,1,data_2025_8.xls
+89,https://ksp.bip.policja.gov.pl/download/25/145973/Pelnykatalogprzestepstwstyczen-wrzesien2025r.xls,2025,9,1,data_2025_9.xls
+90,https://ksp.bip.policja.gov.pl/download/25/146451/Pelnykatalogprzestepstwstyczen-pazdziernik2025.xls,2025,10,1,data_2025_10.xls
