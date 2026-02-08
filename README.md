@@ -1,4 +1,8 @@
 
+# UI Report
+
+[See report](./html).
+
 # Install
 
 ### Plotly dependencies
