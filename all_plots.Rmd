@@ -1,6 +1,0 @@
----
-title: "All plots"
-output:
-  html_document:
-    self_contained: true
----

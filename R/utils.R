@@ -2,7 +2,7 @@
 DATA_ROOT <- "./data"
 DOWNNLOAD_CONFIG <- "./download_config"
 FILTER="WD"
-
+library(jsonlite)
 
 fill_left <- function(v) {
   last <- NA
@@ -35,20 +35,20 @@ sanitize <- function(ddf) {
 }
 
 flipped_col_names <- c(
-    "Postępowania-wszczęte_bieżący-okres",
-    "Postępowania-wszczęte_zmiana-(różnica)",
-    "Przestępstwa-stwierdzone_bieżący-okres",
-    "Przestępstwa-stwierdzone_zmiana-(różnica)",
-    "Przestępstwa-stwierdzone-z-czynami-nieletnich_bieżący-okres",
-    "Przestępstwa-stwierdzone-z-czynami-nieletnich_zmiana-(różnica)",
-    "Przestępstwa-wykryte_bieżący-okres",
-    "Przestępstwa-wykryte_zmiana-(różnica)",
-    "%-wykrycia_bieżący-okres",
-    "%-wykrycia_(różnica)",
-    "Podejrzani-ogółem_bieżący-okres",
-    "Podejrzani-ogółem_zmiana-(różnica)",
-    "Podejrzani---nieletni_bieżący-okres",
-    "Podejrzani---nieletni_zmiana-(różnica)",
+    "Postępowania wszczęte - bieżący okres",
+    "Postępowania wszczęte - zmiana (różnica)",
+    "Przestępstwa stwierdzone - bieżący okres",
+    "Przestępstwa stwierdzone - zmiana (różnica)",
+    "Przestępstwa stwierdzone z czynami nieletnich - bieżący okres",
+    "Przestępstwa stwierdzone z czynami nieletnich - zmiana (różnica)",
+    "Przestępstwa wykryte - bieżący okres",
+    "Przestępstwa wykryte - zmiana (różnica)",
+    "% wykrycia - bieżący okres",
+    "% wykrycia - (różnica)",
+    "Podejrzani ogółem - bieżący okres",
+    "Podejrzani ogółem - zmiana (różnica)",
+    "Podejrzani nieletni - bieżący okres",
+    "Podejrzani nieletni - zmiana (różnica)",
     "date"
 )
 
@@ -62,16 +62,15 @@ column_names <- c(
     "KRP Warszawa VI", "KRP Warszawa VII", "Ogółem KSP"
 )
 
-plot_statistics <- function(df, region, column_name, data_tag) {
-  stopifnot(all(c("date", column_name) %in% names(df)))
+plot_statistics <- function(x, y, region, column_name, data_tag) {
   if (!inherits(df$date, "Date")) df$date <- as.Date(df$date)
 
   tick_vals <- seq(min(df$date, na.rm = TRUE), max(df$date, na.rm = TRUE), by = "month")
 
   plotly::plot_ly(
     data = df,
-    x = ~date,
-    y = df[[column_name]],
+    x = x,
+    y = y,
     type = "scatter",
     mode = "lines",
     name = column_name
@@ -79,7 +78,7 @@ plot_statistics <- function(df, region, column_name, data_tag) {
     plotly::layout(
       title = list(text = paste(column_name, "==", region)),
       xaxis = list(
-        title = "Year-Month",
+        title = "Rok i miesiąc",
         type = "date",
         tickmode = "array",
         tickvals = tick_vals,
@@ -93,48 +92,141 @@ safe_filename <- function(x) {
   x <- gsub(" ", "-", x, fixed = TRUE)
   x <- gsub("/", "", x, fixed = TRUE)
   x <- gsub("%", "procent", x, fixed = TRUE)
-  x <- gsub("[^A-Za-z0-9._=-]+", "-", x)   # extra safety
+  x <- gsub("[^\\p{L}\\p{N}._=-]+", "-", x, perl = TRUE)
   x
 }
 
-save_plot_pages <- function(plot_specs, out_dir = "site", pages_dir = "plots") {
-  # plot_specs: list of lists with df, region, column_name
-  dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
-  plots_path <- file.path(out_dir, pages_dir)
-  dir.create(plots_path, showWarnings = FALSE, recursive = TRUE)
+generate_widgets <- function(plot_specs, out_dir = "generated") {
 
-  links <- character(0)
+  widgets <- list()
+  manifest <- list()
 
-  for (spec in plot_specs) {
-    df <- spec$df
-    region <- spec$region
-    column_name <- spec$column_name
-
-    title <- paste(column_name, "==", region)
-    fname <- safe_filename(paste0(title, ".html"))
-    rel_path <- file.path(pages_dir, fname)
-    full_path <- file.path(out_dir, rel_path)
-
-    p <- plot_statistics(df, region, column_name)
-
-    # Use selfcontained=FALSE for speed and reliability
-    htmlwidgets::saveWidget(p, full_path, selfcontained = FALSE)
-
-    links <- c(links, sprintf('<li><a href="%s">%s</a></li>', rel_path, title))
+  for (region in names(plot_specs)) {
+    widgets[[region]] <- list()
+    manifest[[region]] <- list()
+    counter <- 1
+    for (data_tag in names(plot_specs[[region]])) {
+      manifest[[region]][[data_tag]] <- list()
+      for (column_name in names(plot_specs[[region]][[data_tag]])) {
+        spec = plot_specs[[region]][[data_tag]][[column_name]]
+        widget <- plot_statistics(x=as.Date(spec$x), y=spec$y, region, column_name, data_tag)
+        parent_dir <- paste0("html/", out_dir, "/", region, "/", data_tag)
+        dir.create(parent_dir, recursive = TRUE, showWarnings = FALSE)
+        file_path <- paste0(parent_dir, "/", column_name, ".html")
+        htmlwidgets::saveWidget(
+          widget = widget,
+          file = file_path,
+          selfcontained = FALSE
+        )
+        manifest[[region]][[data_tag]][[column_name]] <- file_path
+      }
+    }
   }
+  manifest_path <- paste0("html/", out_dir, "/manifest.json")
+  write_json(
+    manifest,
+    manifest_path,
+    pretty = TRUE,
+    auto_unbox = TRUE
+  )
+}
 
-  index_html <- paste0(
-    "<!doctype html><html><head><meta charset='utf-8'>",
-    "<meta name='viewport' content='width=device-width, initial-scale=1'>",
-    "<title>Plots</title>",
-    "<style>body{font-family:sans-serif;max-width:900px;margin:40px auto;padding:0 16px}",
-    "li{margin:10px 0}</style>",
-    "</head><body>",
-    "<h1>Plots</h1>",
-    "<ul>", paste(links, collapse = "\n"), "</ul>",
-    "</body></html>"
+library(htmltools)
+
+# ---- you implement this: spec -> htmlwidget (plotly, leaflet, etc.) ----
+make_widget <- function(spec) {
+  df <- spec$df
+  region <- as.character(spec$region)
+  column_name <- as.character(spec$column_name)
+  data_tag <- if (!is.null(spec$data_tag)) as.character(spec$data_tag) else ""
+
+  # Title similar to your previous code
+  title <- paste(column_name, "==", region)
+
+  # Create the htmlwidget (your existing function)
+  w <- plot_statistics(df, region, column_name)
+
+  # Make a stable-ish unique id (avoid spaces/special chars)
+  # Using digest if available; fallback to a sanitized string
+  wid <- paste0(
+    "w_",
+    gsub("[^A-Za-z0-9_]+", "_", paste(region, column_name, data_tag, sep = "__"))
   )
 
-  writeLines(index_html, file.path(out_dir, "index.html"))
-  invisible(file.path(out_dir, "index.html"))
+  # Wrap widget with metadata (still returns htmltools tags, which is fine)
+  htmltools::div(
+    id = wid,
+    class = "plot-widget",
+    `data-region` = region,
+    `data-title`  = title,
+    `data-tag`    = data_tag,
+    w
+  )
 }
+
+
+# Safer filenames for regions (works well for ids like "KRP Warszawa I")
+region_to_filename <- function(region) {
+  paste0(URLencode(region, reserved = TRUE), ".html")
+}
+
+# Main generator
+write_region_pages <- function(plot_specs, html_dir = "html") {
+  regions_dir <- file.path(html_dir, "regions")
+  deps_dir    <- file.path(html_dir, "deps")
+
+  dir.create(regions_dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(deps_dir,    recursive = TRUE, showWarnings = FALSE)
+
+  # ---- group specs by region ----
+  regions <- split(plot_specs, vapply(plot_specs, `[[`, character(1), "region"))
+
+  # ---- build widgets for each region (tagList of widgets) ----
+  region_widgets <- lapply(regions, function(specs) {
+    tagList(lapply(specs, make_widget))
+  })
+
+  # ---- compute dependencies ONCE, across all widgets ----
+  all_widgets <- tagList(unname(region_widgets))
+  deps <- htmlDependencies(all_widgets)
+
+  # ---- copy deps ONCE into html/deps/ (shared) ----
+  # copyDependencyToDir() returns a modified dependency object; we keep names, etc.
+  deps_copied <- lapply(deps, copyDependencyToDir, deps_dir, mustWork = TRUE)
+
+  # ---- write one region HTML file per region ----
+  for (region in names(region_widgets)) {
+    widgets <- region_widgets[[region]]
+
+    # IMPORTANT: region pages live in html/regions/, so deps are at ../deps/
+    deps_rel <- lapply(deps_copied, htmltools::makeDependencyRelative, basepath = regions_dir)
+    deps_tags <- htmltools::renderDependencies(deps_rel)
+
+    page <- tags$html(
+      tags$head(
+        tags$meta(charset = "utf-8"),
+        tags$title(paste("Region:", region)),
+        deps_tags,
+        tags$style(HTML("
+          body { font-family: sans-serif; margin: 12px; }
+          .widget { margin: 10px 0; }
+        "))
+      ),
+      tags$body(
+        tags$h3(region),
+        # wrap each widget (optional)
+        lapply(as.list(widgets), function(w) div(class = "widget", w))
+      )
+    )
+
+    out_file <- file.path(regions_dir, region_to_filename(region))
+    writeLines(as.character(page), out_file, useBytes = TRUE)
+  }
+
+  invisible(list(
+    regions_dir = regions_dir,
+    deps_dir = deps_dir,
+    regions = names(region_widgets)
+  ))
+}
+

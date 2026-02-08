@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 16px;
+    }
+
+    /* main layout */
+    #main-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    /* left panel */
+    #left-panel {
+      width: 35%;
+      min-width: 300px;
+    }
+
+    /* right panel (iframe container) */
+    #chart_placeholder {
+      width: 65%;
+      min-height: 700px;
+      border-left: 1px solid #ddd;
+      padding-left: 16px;
+    }
+
+    /* SVG styling */
+    #svgObj {
+      width: 100%;
+      border: 1px solid #ddd;
+      margin-bottom: 12px;
+    }
+
+  </style>
+
+  <script src="assets/app.js"></script>
+
+</head>
+
+<body>
+
+  <div id="main-layout">
+
+    <!-- LEFT SIDE -->
+    <div id="left-panel">
+
+      <object
+        id="svgObj"
+        data="assets/map.svg"
+        type="image/svg+xml">
+      </object>
+
+      <div id="selector_placeholder"></div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div id="chart_placeholder">
+      <!-- iframe will appear here -->
+    </div>
+
+  </div>
+
+</body>
+</html>

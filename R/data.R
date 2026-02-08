@@ -18,6 +18,7 @@ flog.info(paste("Discovered", length(download_configs), "download configs"))
 flog.debug(paste("Making sure that", DATA_ROOT, "exists"))
 dir.create(DATA_ROOT, showWarnings = FALSE)
 
+plot_specs <- list()
 for (file in download_configs) {
 
     data_tag <- sub("\\.csv$", "", basename(file))
@@ -93,19 +94,26 @@ for (file in download_configs) {
         previous_df <- flipped
     }
     x <- Reduce(rbind, data)
-    xx <- x
-    plot_specs <- list()
-    for (region in unique(xx$region)) {
-        current_df <- xx[xx$region == region,]
+    for (region in unique(x$region)) {
+        if (is.null(plot_specs[[region]])) {
+            plot_specs[[region]] <- list()
+            plot_specs[[region]][[data_tag]] <- list()
+        }
+        current_df <- x[x$region == region,]
+        print(paste("asdf 0", names(current_df)))
         for (col_name in setdiff(names(current_df), c("region", "date"))) {
-            plot_specs[[length(plot_specs) + 1]] <- list(
-                df = current_df,
-                region = region,
-                column_name = col_name,
-                data_tag = data_tag
+            # print(paste(region, col_name))
+            print(paste("asdf 1", col_name, current_df[[col_name]]))
+            # print(paste("asdf 2", names(x[x$region == region,][[col_name]][[data_tag]])))
+            plot_specs[[region]][[data_tag]][[col_name]] <- list(
+                x = current_df$date,
+                y = current_df[[col_name]]
             )
         }
     }
 }
 
-save_plot_pages(plot_specs, out_dir = "site", pages_dir = "plots")
+widgets <- get_widgets(plot_specs, out_dir = "report", pages_dir = "plots")
+for (region in names(widgets)) {
+    
+}
