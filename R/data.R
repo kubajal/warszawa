@@ -79,8 +79,6 @@ for (file in download_configs) {
         flipped <- flipped[ !grepl("Poprzedni", rownames(flipped), fixed = TRUE), ]
         if (collapse && (is.data.frame(previous_df))) {
             flog.debug(paste("  Collapsing with previous"))
-            print(colnames(flipped))
-            print(colnames(previous_df))
             df <- t(flipped - previous_df) %>% as.data.frame
         }
         else {
@@ -100,11 +98,7 @@ for (file in download_configs) {
             plot_specs[[region]][[data_tag]] <- list()
         }
         current_df <- x[x$region == region,]
-        print(paste("asdf 0", names(current_df)))
         for (col_name in setdiff(names(current_df), c("region", "date"))) {
-            # print(paste(region, col_name))
-            print(paste("asdf 1", col_name, current_df[[col_name]]))
-            # print(paste("asdf 2", names(x[x$region == region,][[col_name]][[data_tag]])))
             plot_specs[[region]][[data_tag]][[col_name]] <- list(
                 x = current_df$date,
                 y = current_df[[col_name]]
@@ -113,7 +107,4 @@ for (file in download_configs) {
     }
 }
 
-widgets <- get_widgets(plot_specs, out_dir = "report", pages_dir = "plots")
-for (region in names(widgets)) {
-    
-}
+widgets <- generate_widgets(plot_specs)

@@ -1,43 +1,18 @@
 
-# UI Report
+# Criminality in Warsaw
 
-[See report](./html).
+[See the dashboard](./html).
 
-# Install
+This repository contains R code for loading and diplaying interactive dashboard of criminality statistics in Warsaw between 2018 and 2025.
 
-### Plotly dependencies
+Data source: https://ksp.bip.policja.gov.pl/ksp/statystyki.
 
-```
-sudo apt-get install libssl-dev libcurl4-openssl-dev pandoc
-```
+The interactive charts were created in [Plotly](https://plotly.com/r/), R and hand-crafted HTML & JavaScript. 
 
-### Run
+# Development setup
 
-```R
-source("requirements.R")
-source("R/data.R")
-```
+See how to set up [the development environment](./docs/install.md)
 
-# Bledy w danych
+# Missing data
 
-1. [Pełny katalog przestepstw](https://ksp.bip.policja.gov.pl/ksp/statystyki/27830,Pelny-katalog-przestepstw-garnizon-stoleczny.html):
-
-![alt text](docs/image.png)
-
-2. [Bojki i pobicia](https://ksp.bip.policja.gov.pl/ksp/statystyki/27824,Bojka-i-pobicie-garnizon-stoleczny.html)
-
-![alt text](docs/image-1.png)
-
-3. [Ustawa o narkomanii](https://ksp.bip.policja.gov.pl/ksp/statystyki/27836,Ustawa-o-narkomanii-garnizon-stoleczny.html)
-
-![alt text](docs/image-2.png)
-
-4. [Kradziez z wlamaniem](https://ksp.bip.policja.gov.pl/ksp/statystyki/27829,Kradziez-z-wlamaniem-garnizon-stoleczny.html)
-
-![alt text](docs/image-3.png)
-![alt text](docs/image-4.png)
-
-5. Zgwalcenia
-
-![alt text](docs/image-5.png)
-![alt text](docs/image-6.png)
+Unfortunately, some data at https://ksp.bip.policja.gov.pl/ksp/statystyki are incorrect. See the details on the [missing data page](./docs/missing-data.md).
