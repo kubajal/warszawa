@@ -84,7 +84,7 @@ plot_statistics <- function(x, y, region, column_name, data_tag) {
         tickvals = tick_vals,
         tickformat = "%Y-%m"
       ),
-      yaxis = list(title = column_name)
+      yaxis = list(title = data_tag)
     )
 }
 

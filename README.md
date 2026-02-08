@@ -1,7 +1,7 @@
 
 # Criminality in Warsaw
 
-[See the dashboard](./html).
+[See the dashboard](https://kubajal.github.io/warszawa/html/).
 
 This repository contains R code for loading and diplaying interactive dashboard of criminality statistics in Warsaw between 2018 and 2025.
 
