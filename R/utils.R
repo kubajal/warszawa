@@ -102,7 +102,7 @@ generate_widgets <- function(plot_specs, out_dir = "generated") {
   manifest <- list()
 
   for (region in names(plot_specs)) {
-    widgets[[region]] <- list()
+    widgets <- list()
     manifest[[region]] <- list()
     counter <- 1
     for (data_tag in names(plot_specs[[region]])) {
@@ -113,10 +113,12 @@ generate_widgets <- function(plot_specs, out_dir = "generated") {
         parent_dir <- paste0("html/", out_dir, "/", region, "/", data_tag)
         dir.create(parent_dir, recursive = TRUE, showWarnings = FALSE)
         file_path <- paste0(parent_dir, "/", column_name, ".html")
+        widgets[[length(widgets) + 1]] <- widget
         htmlwidgets::saveWidget(
           widget = widget,
           file = file_path,
-          selfcontained = FALSE
+          selfcontained = FALSE,
+          libdir="libs"
         )
         manifest[[region]][[data_tag]][[column_name]] <- file_path
       }
@@ -129,6 +131,7 @@ generate_widgets <- function(plot_specs, out_dir = "generated") {
     pretty = TRUE,
     auto_unbox = TRUE
   )
+  widgets
 }
 
 library(htmltools)
